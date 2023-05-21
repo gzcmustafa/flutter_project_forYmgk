@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ymgk_lessons_project/question_view.dart';
+import 'package:ymgk_lessons_project/splash.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const QuestionView(),
+      home: const SplashView(),
     );
   }
 }

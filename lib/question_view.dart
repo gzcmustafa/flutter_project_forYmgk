@@ -1,17 +1,20 @@
 import 'dart:io';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 
 import 'card_img.dart';
 
 class QuestionView extends StatefulWidget {
-  const QuestionView({super.key});
+  final AssetsAudioPlayer assetsAudioPlayer;
+  const QuestionView({super.key, required this.assetsAudioPlayer});
 
   @override
   State<QuestionView> createState() => _QuestionViewState();
 }
 
 class _QuestionViewState extends State<QuestionView> {
+  // assetsAudioPlayer = AssetsAudioPlayer();
   String s1 = "assets/questions/soru.png";
   String s1A = "assets/questions/image.png";
   String s1B = "assets/questions/image1.png";
@@ -54,6 +57,7 @@ class _QuestionViewState extends State<QuestionView> {
   late CardImg card5;
   int? _selectedOptionIndex;
   late CardImg chooseCard;
+  bool isOpen = true;
 
   @override
   void initState() {
@@ -75,7 +79,18 @@ class _QuestionViewState extends State<QuestionView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quiz'),
+        backgroundColor: Colors.green,
+        title: const Text('Sorular'),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await onPressed();
+            },
+            icon: Icon(isOpen ? Icons.music_note : Icons.music_off),
+            iconSize: 30,
+          ),
+          const SizedBox(width: 10)
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -107,7 +122,9 @@ class _QuestionViewState extends State<QuestionView> {
                   // content: const Text('Yeni soruya geç'),
                   actions: <Widget>[
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        await widget.assetsAudioPlayer.stop();
+                        await widget.assetsAudioPlayer.dispose();
                         exit(0);
                       },
                       child: const Text('Çıkış'),
@@ -179,5 +196,16 @@ class _QuestionViewState extends State<QuestionView> {
         child: Image.asset(path),
       ),
     );
+  }
+
+  Future<void> onPressed() async {
+    setState(() {
+      isOpen = !isOpen;
+    });
+    if (widget.assetsAudioPlayer.isPlaying.value) {
+      await widget.assetsAudioPlayer.pause();
+    } else {
+      await widget.assetsAudioPlayer.play();
+    }
   }
 }
